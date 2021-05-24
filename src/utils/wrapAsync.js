@@ -1,6 +1,6 @@
 const wrapAsync = (fn) => {
   return (req, res, next) => {
-    fn(req, res, next).next((e) => next(e));
+    fn(req, res, next).catch((err) => next(err));
   };
 };
 

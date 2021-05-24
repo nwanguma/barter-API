@@ -1,15 +1,21 @@
 const express = require("express");
-
-const { currentUser, login, register, logout } = require("../controllers/user");
+const { Register, Login } = require("../controllers/user");
+const { inputValidation } = require("../middleware/validation");
+const {
+  registerValidationSchema,
+  loginValidationSchema,
+} = require("../validation/schemas");
 
 const router = express.Router();
 
-router.get("/me", currentUser);
+router.route("/").get((req, res, next) => {
+  res.json({
+    title: "testing",
+  });
+});
 
-router.post("/login", login);
+router.post("/register", inputValidation(registerValidationSchema), Register);
 
-router.post("/register", register);
-
-router.delete("/logout", logout);
+router.post("/login", inputValidation(loginValidationSchema), Login);
 
 module.exports = router;

@@ -1,26 +1,30 @@
 const express = require("express");
-const { mongoose } = require("./db/mongoose");
-const helmet = require("helmet");
-const cors = require("cors");
 const morgan = require("morgan");
+const cors = require("cors");
+const helmet = require("helmet");
+const mongoose = require("./db/db");
 require("dotenv").config();
 
-const products = require("./routes/product");
 const users = require("./routes/user");
 const profiles = require("./routes/profile");
+const products = require("./routes/products");
+const { error } = require("./middleware/error");
 
-const app = express();
+const base_url = "/api/v1";
 const PORT = process.env.PORT || 3000;
+const app = express();
 
-app.use(helmet());
-app.use(cors());
 app.use(morgan("dev"));
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
-app.use("/api/v1/user", users);
-app.use("/api/v1/products", products);
-app.use("/api/v1/profile", profiles);
+app.use(`${base_url}/users`, users);
+app.use(`${base_url}/profiles`, profiles);
+app.use(`${base_url}/products`, products);
+
+app.use(error);
 
 app.listen(PORT, () => {
-  console.log(`Now listening on port:${PORT}`);
+  console.log(`Now listening on port: ${PORT}`);
 });
