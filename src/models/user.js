@@ -2,6 +2,8 @@ const { Schema, model } = require("mongoose");
 const validator = require("validator");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const Profile = require("./profile");
+const { ObjectID } = require("mongodb");
 
 const UserSchema = new Schema(
   {
@@ -48,6 +50,25 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
+User.methods.generateProfile = async function () {
+  const user = this;
+  const userObject = user.toObject();
+  const profileId = new ObjectID();
+
+  const newProfile = new Profile({
+    _id: profileId,
+    user: userObject._id,
+    email: userObject.email,
+    username: userObject.username,
+  });
+
+  await newProfile.save();
+
+  user.profile = profileId;
+
+  return user.save();
+};
+
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const access = "auth";
@@ -62,7 +83,7 @@ UserSchema.methods.generateAuthToken = async function () {
     )
     .toString();
 
-  user.updateOne({
+  await user.updateOne({
     $push: {
       tokens: {
         token,
@@ -93,6 +114,24 @@ UserSchema.methods.toJSON = function () {
 
   return response;
 };
+
+UserSchema.pre("save", function (next) {
+  const user = this;
+
+  user.populate("profile").execPopulate();
+
+  if (user.isModified("password")) {
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        user.password = hash;
+
+        next();
+      });
+    });
+  } else {
+    next();
+  }
+});
 
 const User = model("user", UserSchema);
 
