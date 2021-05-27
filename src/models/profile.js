@@ -13,6 +13,14 @@ const ProfileSchema = new Schema({
     trim: true,
     minlength: 3,
   },
+  firstname: {
+    type: String,
+    minlength: 3,
+  },
+  lastname: {
+    type: String,
+    minlength: 3,
+  },
   gender: {
     type: String,
   },
@@ -35,9 +43,17 @@ const ProfileSchema = new Schema({
 });
 
 ProfileSchema.methods.toJSON = function () {
-  const { email, username, gender, age, location } = this.toObject();
+  const { email, username, firstname, lastname, gender, age, location } = this;
 
-  return { email, username, gender, age, location };
+  return {
+    email,
+    username,
+    firstname,
+    lastname,
+    gender,
+    age,
+    location,
+  };
 };
 
 const Profile = model("profile", ProfileSchema);

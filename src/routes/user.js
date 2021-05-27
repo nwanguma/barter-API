@@ -4,8 +4,11 @@ const {
   Login,
   ResetPassword,
   CurrentUser,
+  Logout,
+  LogoutAll,
 } = require("../controllers/user");
 const { inputValidation } = require("../middleware/validation");
+const authenticate = require("../middleware/auth");
 const {
   registerValidationSchema,
   loginValidationSchema,
@@ -21,11 +24,14 @@ router.route("/").get((req, res, next) => {
 });
 router.post("/register", inputValidation(registerValidationSchema), Register);
 router.post("/login", inputValidation(loginValidationSchema), Login);
-router.get("/me", CurrentUser);
+router.get("/me", authenticate, CurrentUser);
 router.post(
   "/password/reset",
+  authenticate,
   inputValidation(passwordResetValidationSchema),
   ResetPassword
 );
+router.post("/logout", authenticate, Logout);
+router.post("/logout/all", authenticate, LogoutAll);
 
 module.exports = router;
