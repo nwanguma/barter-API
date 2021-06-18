@@ -37,9 +37,18 @@ const productValidationSchema = Joi.object().keys({
   specifications: Joi.array().items(Joi.string()).required(),
 });
 
+const profileUpdateValidationSchema = Joi.object().keys({
+  firstname: Joi.string().min(3).max(20).required(),
+  lastname: Joi.string().min(3).max(20).required(),
+  gender: Joi.string().min(3).max(20).required(),
+  age: Joi.string().min(2).required(),
+  location: Joi.array().length(2).items(Joi.number()).required(),
+});
+
 module.exports = {
   registerValidationSchema,
   loginValidationSchema,
   passwordResetValidationSchema,
   productValidationSchema,
+  profileUpdateValidationSchema,
 };

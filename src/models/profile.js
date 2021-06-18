@@ -38,10 +38,33 @@ const ProfileSchema = new Schema({
     ref: "user",
     type: Schema.Types.ObjectId,
   },
+  isBanned: {
+    type: Boolean,
+  },
+  isVerified: {
+    type: Boolean,
+  },
+  isOnline: {
+    type: Boolean,
+  },
+  lastActive: {
+    type: Date,
+  },
 });
 
 ProfileSchema.methods.toJSON = function () {
-  const { email, username, firstname, lastname, gender, age, location } = this;
+  const {
+    email,
+    username,
+    firstname,
+    lastname,
+    gender,
+    age,
+    location,
+    lastActive,
+    isOnline,
+    isVerified,
+  } = this;
 
   return {
     email,
@@ -51,6 +74,9 @@ ProfileSchema.methods.toJSON = function () {
     gender,
     age,
     location,
+    lastActive,
+    isOnline,
+    isVerified,
   };
 };
 
