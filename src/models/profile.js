@@ -15,17 +15,15 @@ const ProfileSchema = new Schema({
   },
   firstname: {
     type: String,
-    minlength: 3,
   },
   lastname: {
     type: String,
-    minlength: 3,
   },
   gender: {
     type: String,
   },
   age: {
-    type: Number,
+    type: String,
   },
   location: {
     type: {

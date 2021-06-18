@@ -139,6 +139,10 @@ UserSchema.pre("save", function (next) {
       user: user._id,
       username: user.username,
       email: user.email,
+      firstname: "",
+      lastname: "",
+      gender: "",
+      age: "",
     });
 
     //There's probably a cleaner way to do this
@@ -163,7 +167,20 @@ UserSchema.pre("save", function (next) {
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
 
-  return user;
+  const { email, username, profile } = user;
+  const { firstname, lastname, gender, age, location } = profile;
+
+  return {
+    email,
+    username,
+    profile: {
+      firstname,
+      lastname,
+      gender,
+      age,
+      location,
+    },
+  };
 };
 
 const User = model("user", UserSchema);

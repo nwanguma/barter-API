@@ -29,8 +29,17 @@ const passwordResetValidationSchema = Joi.object().keys({
     .required(),
 });
 
+const productValidationSchema = Joi.object().keys({
+  name: Joi.string().min(3).max(20).required(),
+  price: Joi.number().required(),
+  quantity: Joi.number().required(),
+  description: Joi.string().required(),
+  specifications: Joi.array().items(Joi.string()).required(),
+});
+
 module.exports = {
   registerValidationSchema,
   loginValidationSchema,
   passwordResetValidationSchema,
+  productValidationSchema,
 };

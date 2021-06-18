@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const users = require("./routes/user");
 const profiles = require("./routes/profile");
-const products = require("./routes/products");
+const products = require("./routes/product");
 const { error } = require("./middleware/error");
 
 const base_url = "/api/v1";
