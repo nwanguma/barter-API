@@ -11,6 +11,18 @@ const ProductTypeSchema = new Schema(
   { timestamps: true }
 );
 
+ProductTypeSchema.methods.toJSON = function () {
+  const productType = this;
+
+  console.log(productType);
+
+  const { _id, name } = productType;
+
+  console.log(_id, name);
+
+  return { id: _id, name };
+};
+
 const ProductType = model("productType", ProductTypeSchema);
 
 module.exports = ProductType;

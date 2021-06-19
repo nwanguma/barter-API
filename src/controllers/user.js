@@ -53,6 +53,8 @@ const Login = wrapAsync(async (req, res) => {
 const CurrentUser = wrapAsync(async (req, res) => {
   const userWithProfile = await req.user.populate("profile").execPopulate();
 
+  console.log(userWithProfile);
+
   res.json({
     success: true,
     data: {

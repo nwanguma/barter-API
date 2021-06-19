@@ -11,6 +11,14 @@ const ServiceTypeSchema = new Schema(
   { timestamps: true }
 );
 
+ServiceTypeSchema.methods.toJSON = async function () {
+  const serviceType = this;
+
+  const { _id, name } = serviceType;
+
+  return { id: _id, name };
+};
+
 const ServiceType = model("serviceType", ServiceTypeSchema);
 
 module.exports = ServiceType;

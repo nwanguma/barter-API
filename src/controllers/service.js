@@ -1,59 +1,49 @@
 const { ObjectID } = require("mongodb");
 
-const Product = require("../models/product.js");
+const Service = require("../models/service.js");
 const AppError = require("../utils/AppError.js");
 
 const { isValidObjectId } = require("../utils/helper.js");
 
-const createProduct = async (req, res) => {
+const createService = async (req, res) => {
   const user = req.user;
-  const productId = new ObjectID();
+  const serviceId = new ObjectID();
 
-  const {
-    name,
-    price,
-    category,
-    type,
-    quantity,
-    details,
-    media,
-    location,
-    options,
-  } = req.body;
+  const { name, charge, category, type, location, details, media, options } =
+    req.body;
 
   if (!isValidObjectId(type))
-    throw new AppError("Product type is not valid", 400);
+    throw new AppError("Service type is not valid", 400);
 
   if (!isValidObjectId(category))
     throw new AppError("Category is not valid", 400);
 
-  const newProduct = new Product({
-    _id: productId,
+  const newService = new Service({
+    _id: serviceId,
     name,
-    price,
+    charge,
     category,
     type,
-    quantity,
+    location,
     details,
     media,
-    location,
     options,
     user: user._id,
   });
 
-  const product = await newProduct.save();
+  const service = await newService.save();
 
-  user.products.push(productId);
+  user.services.push(serviceId);
 
   await user.save();
 
   res.status(201).json({
     success: true,
-    data: product,
+    data: service,
   });
 };
 
-const getUserProducts = async (req, res, next) => {
+const getUserServices = async (req, res, next) => {
   const user = req.user;
   const queries = req.query;
   const { page, sortBy, limit, price, category, type, quantity } = queries;
@@ -75,7 +65,7 @@ const getUserProducts = async (req, res, next) => {
 
   await user
     .populate({
-      path: "products",
+      path: "services",
       match,
       options: {
         skip: parseInt(page),
@@ -87,107 +77,97 @@ const getUserProducts = async (req, res, next) => {
 
   res.json({
     success: true,
-    data: req.user.products,
+    data: req.user.services,
   });
 };
 
-const getUserProduct = async (req, res) => {
+const getUserService = async (req, res) => {
   const user = req.user;
   const id = req.params.id;
 
-  if (!isValidObjectId(id)) throw new AppError("product id is not valid", 400);
+  if (!isValidObjectId(id)) throw new AppError("service id is not valid", 400);
 
-  const product = await Product.findOne({
+  const service = await Service.findOne({
     user: user._id,
     _id: id,
-  }).populate("product");
+  }).populate("service");
 
-  if (!product) throw new AppError("product not found", 404);
+  if (!service) throw new AppError("service not found", 404);
 
   res.json({
     success: true,
-    data: product,
+    data: service,
   });
 };
 
-const getProduct = async (req, res) => {
+const getService = async (req, res) => {
   const id = req.params.id;
 
-  if (!isValidObjectId(id)) throw new AppError("product id is not valid", 400);
+  if (!isValidObjectId(id)) throw new AppError("service id is not valid", 400);
 
-  const product = await Product.findOne({
+  const service = await Service.findOne({
     _id: id,
-  }).populate("product");
+  }).populate("Service");
 
-  if (!product) throw new AppError("product not found", 404);
+  if (!service) throw new AppError("service not found", 404);
 
   res.json({
     success: true,
-    data: product,
+    data: service,
   });
 };
 
-const editProduct = async (req, res) => {
+const editService = async (req, res) => {
   const user = req.user;
   const id = req.params.id;
 
-  if (!isValidObjectId(id)) throw new AppError("product id is not valid", 400);
+  if (!isValidObjectId(id)) throw new AppError("service id is not valid", 400);
 
-  const {
-    name,
-    price,
-    category,
-    type,
-    quantity,
-    details,
-    media,
-    location,
-    options,
-  } = req.body;
+  const { name, charge, type, category, location, details, media, options } =
+    req.body;
 
   if (!isValidObjectId(type))
-    throw new AppError("Product type is not valid", 400);
+    throw new AppError("service type is not valid", 400);
 
   if (!isValidObjectId(category))
-    throw new AppError("Category is not valid", 400);
+    throw new AppError("category is not valid", 400);
 
-  const updatedProduct = await Product.findOneAndUpdate(
+  const updatedService = await Service.findOneAndUpdate(
     { user: user._id, _id: id },
     {
       $set: {
         name,
-        price,
+        charge,
         category,
         type,
-        quantity,
+        location,
         details,
         media,
-        location,
         options,
         user: user._id,
       },
     }
   );
 
-  if (!updatedProduct) throw new AppError("product not found", 404);
+  if (!updatedService) throw new AppError("service not found", 404);
 
   res.status(201).json({
     success: true,
-    data: updatedProduct,
+    data: updatedService,
   });
 };
 
-const deleteProduct = async (req, res) => {
+const deleteService = async (req, res) => {
   const id = req.params.id;
 
-  if (!isValidObjectId(id)) throw new AppError("product id is not valid", 400);
+  if (!isValidObjectId(id)) throw new AppError("service id is not valid", 400);
 
-  const product = await Product.findOneAndDelete({
+  const service = await Service.findOneAndDelete({
     _id: id,
     user: req.user._id,
   });
 
-  if (!product) throw new AppError("product not found", 404);
+  if (!service) throw new AppError("service not found", 404);
 
   res.send({
     success: true,
@@ -195,7 +175,7 @@ const deleteProduct = async (req, res) => {
   });
 };
 
-const getAllProducts = async (req, res) => {
+const getAllServices = async (req, res) => {
   const user = req.user;
   const queries = req.query;
   const { page, sortBy, limit, price, category, type, quantity } = queries;
@@ -215,23 +195,23 @@ const getAllProducts = async (req, res) => {
     sort[key] = value;
   }
 
-  const products = await Product.find(match)
+  const services = await Service.find(match)
     .skip(parseInt(page))
     .limit(parseInt(limit))
     .sort(sort);
 
   res.json({
     success: true,
-    data: products,
+    data: services,
   });
 };
 
 module.exports = {
-  createProduct,
-  getUserProducts,
-  editProduct,
-  deleteProduct,
-  getAllProducts,
-  getUserProduct,
-  getProduct,
+  createService,
+  getUserServices,
+  editService,
+  deleteService,
+  getAllServices,
+  getUserService,
+  getService,
 };

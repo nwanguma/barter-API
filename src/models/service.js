@@ -16,7 +16,7 @@ const ServiceSchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: "category",
+      ref: "serviceCategory",
     },
     type: {
       type: Schema.Types.ObjectId,
@@ -25,6 +25,7 @@ const ServiceSchema = new Schema(
     details: {
       experienceLength: String,
       description: String,
+      skills: [String],
     },
     matches: [
       {

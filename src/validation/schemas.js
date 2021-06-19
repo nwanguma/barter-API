@@ -32,9 +32,39 @@ const passwordResetValidationSchema = Joi.object().keys({
 const productValidationSchema = Joi.object().keys({
   name: Joi.string().min(3).max(20).required(),
   price: Joi.number().required(),
+  category: Joi.string().min(3).max(30).required(),
+  type: Joi.string().min(3).max(30).required(),
   quantity: Joi.number().required(),
-  description: Joi.string().required(),
-  specifications: Joi.array().items(Joi.string()).required(),
+  location: Joi.array().length(2).items(Joi.number()),
+  details: Joi.object().keys({
+    dimensions: Joi.string(),
+    manufacturer: Joi.string(),
+    dateOfPurchase: Joi.string(),
+    purchaseCondition: Joi.string(),
+    SKU: Joi.string(),
+    model: Joi.string(),
+    weight: Joi.string(),
+    color: Joi.string(),
+    description: Joi.string(),
+    additionalInformation: Joi.array().items(Joi.string()),
+  }),
+  media: Joi.string().min(3).required(),
+  options: Joi.array().items(Joi.string()),
+});
+
+const serviceValidationSchema = Joi.object().keys({
+  name: Joi.string().min(3).max(20).required(),
+  charge: Joi.number().required(),
+  category: Joi.string().min(3).max(30).required(),
+  type: Joi.string().min(3).max(30).required(),
+  location: Joi.array().length(2).items(Joi.number()),
+  details: Joi.object().keys({
+    experienceLength: Joi.string(),
+    description: Joi.string(),
+    skills: Joi.array().items(Joi.string()),
+  }),
+  media: Joi.string().min(3).required(),
+  options: Joi.array().items(Joi.string()),
 });
 
 const profileUpdateValidationSchema = Joi.object().keys({
@@ -45,10 +75,22 @@ const profileUpdateValidationSchema = Joi.object().keys({
   location: Joi.array().length(2).items(Joi.number()).required(),
 });
 
+const typeValidationSchema = Joi.object().keys({
+  name: Joi.string().min(3).max(50).required(),
+  category: Joi.string().min(3).max(50).required(),
+});
+
+const categoryValidationSchema = Joi.object().keys({
+  name: Joi.string().min(3).max(50).required(),
+});
+
 module.exports = {
   registerValidationSchema,
   loginValidationSchema,
   passwordResetValidationSchema,
   productValidationSchema,
   profileUpdateValidationSchema,
+  typeValidationSchema,
+  categoryValidationSchema,
+  serviceValidationSchema,
 };

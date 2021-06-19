@@ -16,7 +16,7 @@ const ProductSchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: "category",
+      ref: "productCategory",
     },
     type: {
       type: Schema.Types.ObjectId,
@@ -76,26 +76,42 @@ const ProductSchema = new Schema(
   { timestamps: true }
 );
 
-ProductSchema.methods.toJSON = async function () {
+ProductSchema.methods.toJSON = function () {
   const product = this;
 
-  const body = _.pick(product, [
-    "name",
-    "price",
-    "user",
-    "category",
-    "type",
-    "quantity",
-    "details",
-    "matches",
-    "likes",
-    "comments",
-    "media",
-    "location",
-    "options",
-  ]);
+  const {
+    name,
+    price,
+    user,
+    category,
+    type,
+    quantity,
+    details,
+    matches,
+    likes,
+    comments,
+    media,
+    location,
+    options,
+    _id,
+  } = product;
 
-  return body;
+  return {
+    name,
+    price,
+    user,
+    category,
+    type,
+    quantity,
+    details,
+    matches,
+    likes,
+    comments,
+    media,
+    location,
+    options,
+    id: _id,
+  };
 };
 
 const Product = model("product", ProductSchema);
