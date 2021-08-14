@@ -12,11 +12,10 @@ const ServiceTypeSchema = new Schema(
 );
 
 ServiceTypeSchema.methods.toJSON = async function () {
-  const serviceType = this;
+  const serviceType = this.toObject();
+  const { _id: id, name } = serviceType;
 
-  const { _id, name } = serviceType;
-
-  return { id: _id, name };
+  return { id, name };
 };
 
 const ServiceType = model("serviceType", ServiceTypeSchema);

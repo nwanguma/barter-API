@@ -53,30 +53,11 @@ const ProfileSchema = new Schema({
 });
 
 ProfileSchema.methods.toJSON = function () {
-  const {
-    email,
-    username,
-    firstname,
-    lastname,
-    gender,
-    age,
-    location,
-    lastActive,
-    isOnline,
-    isVerified,
-  } = this;
+  const profile = this.toObject();
+  const { _id, ...rest } = profile;
 
   return {
-    email,
-    username,
-    firstname,
-    lastname,
-    gender,
-    age,
-    location,
-    lastActive,
-    isOnline,
-    isVerified,
+    ...rest,
   };
 };
 

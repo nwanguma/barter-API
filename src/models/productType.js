@@ -12,13 +12,8 @@ const ProductTypeSchema = new Schema(
 );
 
 ProductTypeSchema.methods.toJSON = function () {
-  const productType = this;
-
-  console.log(productType);
-
+  const productType = this.toObject();
   const { _id, name } = productType;
-
-  console.log(_id, name);
 
   return { id: _id, name };
 };

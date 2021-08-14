@@ -77,40 +77,12 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.methods.toJSON = function () {
-  const product = this;
-
-  const {
-    name,
-    price,
-    user,
-    category,
-    type,
-    quantity,
-    details,
-    matches,
-    likes,
-    comments,
-    media,
-    location,
-    options,
-    _id,
-  } = product;
+  const product = this.toObject();
+  const { _id: id, ...rest } = product;
 
   return {
-    name,
-    price,
-    user,
-    category,
-    type,
-    quantity,
-    details,
-    matches,
-    likes,
-    comments,
-    media,
-    location,
-    options,
-    id: _id,
+    id,
+    ...rest,
   };
 };
 

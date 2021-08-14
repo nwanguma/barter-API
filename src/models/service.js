@@ -66,24 +66,10 @@ const ServiceSchema = new Schema(
 );
 
 ServiceSchema.methods.toJSON = async function () {
-  const product = this;
+  const service = this.toObject();
+  const { _id, ...rest } = service;
 
-  const body = _.pick(product, [
-    "name",
-    "charge",
-    "user",
-    "category",
-    "type",
-    "details",
-    "matches",
-    "likes",
-    "comments",
-    "media",
-    "location",
-    "options",
-  ]);
-
-  return body;
+  return { ...rest };
 };
 
 const Service = model("service", ServiceSchema);

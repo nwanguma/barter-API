@@ -6,10 +6,10 @@ const ServiceCategorySchema = new Schema(
       type: String,
       unique: true,
     },
-    products: [
+    services: [
       {
         type: Schema.Types.ObjectId,
-        ref: "product",
+        ref: "service",
       },
     ],
   },
@@ -17,13 +17,12 @@ const ServiceCategorySchema = new Schema(
 );
 
 ServiceCategorySchema.methods.toJSON = function () {
-  const product = this;
-
-  const { name, _id } = product;
+  const serviceCategory = this.toObject();
+  const { name, _id: id } = serviceCategory;
 
   return {
     name,
-    id: _id,
+    id,
   };
 };
 
